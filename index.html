@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>부루마불 클래식 마스터 에디션 (Blue Marble Professional)</title>
+    <link rel="stylesheet" href="style.css">
+    <script type="module" src="js/main.js"></script>
+</head>
+<body>
+
+    <div id="center-fade-popup">팝업 내용</div>
+
+    <div id="log-modal" class="general-modal">
+        <div class="modal-content-box">
+            <h3 style="color:#2c3e50;">📋 전체 경기 히스토리</h3>
+            <div id="modal-log-area" class="modal-scroll-area"></div>
+            <button class="btn" style="background:#7f8c8d; width:100%;" onclick="toggleLogModal(false)">닫기</button>
+        </div>
+    </div>
+
+    <div id="key-log-modal" class="general-modal">
+        <div class="modal-content-box">
+            <h3 style="color:#e67e22;">🔑 황금열쇠 발동 기록</h3>
+            <div id="modal-key-log-area" class="modal-scroll-area"></div>
+            <button class="btn" style="background:#7f8c8d; width:100%;" onclick="toggleKeyLogModal(false)">닫기</button>
+        </div>
+    </div>
+
+    <div id="selection-screen">
+        <div class="selection-box" id="start-screen-box">
+            <div class="main-title-logo">부루마불</div>
+            <div class="subtitle-logo">BLUE MARBLE CLASSIC</div>
+            <h3 style="font-size: 1.15rem; color: #2c3e50; margin-bottom: 25px;">보드게임 마스터 에디션에 오신 것을 환영합니다</h3>
+            <button class="btn" style="font-size: 1.3rem; padding: 15px 40px; margin-top: 10px;" onclick="pressGameStart()">게임 시작</button>
+        </div>
+
+        <div class="selection-box" id="character-box" style="display: none;">
+            <div class="main-title-logo">부루마불</div>
+            <div class="subtitle-logo">BLUE MARBLE CLASSIC</div>
+            <h3 style="font-size: 1.15rem; color: #2c3e50; margin-bottom: 25px;">원하시는 마스코트를 선택해 주세요</h3>
+            <div class="emoji-options">
+                <div class="emoji-btn-wrapper">
+                    <button class="emoji-btn" onclick="selectCharacter('🐶')">🐶</button>
+                    <div class="character-label">멍멍이</div>
+                </div>
+                <div class="emoji-btn-wrapper">
+                    <button class="emoji-btn" onclick="selectCharacter('🐱')">🐱</button>
+                    <div class="character-label">냐옹이</div>
+                </div>
+                <div class="emoji-btn-wrapper">
+                    <button class="emoji-btn" onclick="selectCharacter('🐰')">🐰</button>
+                    <div class="character-label">토순이</div>
+                </div>
+                <div class="emoji-btn-wrapper">
+                    <button class="emoji-btn" onclick="selectCharacter('🐹')">🐹</button>
+                    <div class="character-label">찍찍이</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="selection-box" id="color-box" style="display: none;">
+            <div class="main-title-logo">부루마불</div>
+            <div class="subtitle-logo">BLUE MARBLE CLASSIC</div>
+            <h3 style="font-size: 1.15rem; color: #2c3e50; margin-bottom: 25px;">사용하실 비행기 말의 색상을 선택해 주세요</h3>
+            <div class="emoji-options" style="gap: 15px;">
+                <div class="color-btn" style="background:#e74c3c;" onclick="selectColor('#e74c3c')"></div>
+                <div class="color-btn" style="background:#3498db;" onclick="selectColor('#3498db')"></div>
+                <div class="color-btn" style="background:#2ecc71;" onclick="selectColor('#2ecc71')"></div>
+                <div class="color-btn" style="background:#f1c40f;" onclick="selectColor('#f1c40f')"></div>
+                <div class="color-btn" style="background:#9b59b6;" onclick="selectColor('#9b59b6')"></div>
+                <div class="color-btn" style="background:#e67e22;" onclick="selectColor('#e67e22')"></div>
+            </div>
+            <button class="btn" style="margin-top: 35px; background-color: #7f8c8d; font-size: 0.9rem; padding: 8px 20px;" onclick="goBackToCharacter()">캐릭터 다시 고르기</button>
+        </div>
+
+        <div class="selection-box" id="time-screen-box" style="display: none;">
+            <div class="main-title-logo">부루마불</div>
+            <div class="subtitle-logo">BLUE MARBLE CLASSIC</div>
+            <h3 style="font-size: 1.15rem; color: #2c3e50; margin-bottom: 15px;">게임 진행 시간을 선택해 주세요</h3>
+            
+            <div class="time-selector-container">
+                <button class="btn time-control-btn" onclick="adjustGameTime(-5)">-</button>
+                <div id="selected-time-display" class="time-display-span">20분</div>
+                <button class="btn time-control-btn" onclick="adjustGameTime(5)">+</button>
+            </div>
+
+            <button class="btn" style="font-size: 1.2rem; padding: 12px 40px; margin-top: 10px; width: 100%;" onclick="confirmGameTime()">게임 시작</button>
+            <button class="btn" style="margin-top: 20px; background-color: #7f8c8d; font-size: 0.9rem; padding: 8px 20px;" onclick="goBackToColor()">말 색상 다시 고르기</button>
+        </div>
+    </div>
+
+    <div id="dice-overlay">
+        <div class="dice-popup-box">
+            <div id="dice-popup-player" class="dice-popup-player">플레이어 차례</div>
+            <div id="dice-popup-cubes" class="dice-popup-cubes">
+                <span id="dice-cube-1">⚀</span>
+                <span id="dice-cube-2">⚀</span>
+            </div>
+            <div id="dice-popup-number" class="dice-popup-number">0 칸 전진</div>
+            <div id="dice-popup-double-msg" style="color: #e67e22; font-weight: 900; margin-top: 12px; display: none; font-size: 1.2rem;">🎉 더블! 연속 주사위 권한 획득 🎉</div>
+        </div>
+    </div>
+
+    <div id="result-overlay">
+        <div class="result-box">
+            <h2 id="result-title" style="text-align: center; color: #e74c3c; font-size: 2.2rem; margin-bottom: 10px;">🏆 최종 정산 결과 🏆</h2>
+            <table class="result-table">
+                <thead>
+                    <tr>
+                        <th>순위</th>
+                        <th>플레이어</th>
+                        <th>총 자산 가치</th>
+                        <th>상태</th>
+                    </tr>
+                </thead>
+                <tbody id="result-rows"></tbody>
+            </table>
+            <button class="btn" style="margin-top: 25px; width: 100%; background-color: #2c3e50;" onclick="location.reload();">새 게임 시작</button>
+        </div>
+    </div>
+
+    <div id="main-container">
+        <div id="board">
+            <div id="center-panel">
+                <div id="toast-container"></div>
+                
+                <div class="center-globe">🌍</div>
+                <div id="timer-display">남은 시간: 20:00</div>
+                <div id="turn-info">데이터 로드 중...</div>
+                <div id="welfare-pool">사회복지기금 잔고: 0원</div>
+                <div id="dice-display">🎲 🎲</div>
+                <button id="dice-btn" class="btn" onclick="rollDiceClick()" disabled>주사위 던지기</button>
+                
+                <div id="action-controls" style="display: none;"></div>
+            </div>
+        </div>
+
+        <div id="dashboard">
+            <button id="pause-btn" class="btn" style="background:#2c3e50; padding: 10px 15px; font-size:0.95rem; font-weight:900;" onclick="togglePause()">⏸ 게임 일시정지 (Pause)</button>
+            <button class="btn" style="background:#7f8c8d; padding: 8px 15px; font-size:0.9rem;" onclick="toggleLogModal(true)">📋 일반 경기 기록 보기</button>
+            <button class="btn" style="background:#e67e22; padding: 8px 15px; font-size:0.9rem;" onclick="toggleKeyLogModal(true)">🔑 황금열쇠 기록 보기</button>
+            
+            <table class="status-table">
+                <thead>
+                    <tr>
+                        <th>플레이어</th>
+                        <th>보유 자산</th>
+                        <th>위치</th>
+                        <th>바퀴</th>
+                        <th>상태</th>
+                    </tr>
+                </thead>
+                <tbody id="player-status-rows"></tbody>
+            </table>
+
+            <div id="isolation-container">
+                <div id="isolation-title">🔒 파산자 별도 격리 구역</div>
+                <div id="isolation-list">
+                    <span style="color:#7f8c8d; font-size:0.75rem;" id="empty-iso-msg">현재 수감자가 없습니다.</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <button id="settings-btn" onclick="toggleSettingsModal(true)">⚙️</button>
+
+    <div id="settings-modal" class="general-modal" style="display: none;">
+        <div class="modal-content-box" style="width: 320px;">
+            <h3 style="color:#2c3e50; margin-bottom:20px; text-align: center;">⚙️ 게임 환경 설정</h3>
+            <div style="margin-bottom: 15px; text-align: left; font-size: 0.95rem;">
+                <label style="cursor: pointer;"><input type="checkbox" id="mute-bgm-chk" onchange="chkBgmMute(this.checked)"> BGM 음소거</label>
+            </div>
+            <div style="margin-bottom: 15px; text-align: left; font-size: 0.95rem;">
+                <label style="cursor: pointer;"><input type="checkbox" id="mute-effect-chk" onchange="chkEffectMute(this.checked)"> 효과음 음소거</label>
+            </div>
+            <div style="margin-bottom: 25px; text-align: left; font-size: 0.95rem; border-top: 1px solid #eee; padding-top: 15px;">
+                <label style="cursor: pointer; font-weight: bold; color: #e74c3c;"><input type="checkbox" id="mute-all-chk" onchange="chkAllMute(this.checked)"> 전체 음소거</label>
+            </div>
+            <button class="btn" style="background:#7f8c8d; width:100%;" onclick="toggleSettingsModal(false)">설정 닫기</button>
+        </div>
+    </div>
+</body>
+</html>
